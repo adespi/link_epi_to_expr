@@ -1,0 +1,12 @@
+cp /data1/antoine/hs37d5.fa.gz /dev/shm/
+cp /data1/antoine/genome_seq/ALL.chr1.phase3_shapeit2_mvncall_integrated_v5a.20130502.genotypes.vcf.gz /dev/shm/
+
+before=`date +%s%N`
+samtools faidx /dev/shm/hs37d5.fa.gz 1:`echo $gene $position|awk '{print $1+$2}'`-`echo $gene $position|awk '{print $1+$2+1300}'` |bcftools consensus -s $patient /dev/shm/ALL.chr1.phase3_shapeit2_mvncall_integrated_v5a.20130502.genotypes.vcf.gz|sed "s/^>\(.*\)/>chr$patient:$position:\1/"
+echo `date +%s%N` $before| awk '{print $1-$2}'
+38497024
+
+before=`date +%s%N`
+samtools faidx /data1/antoine/hs37d5.fa.gz 1:`echo $gene $position|awk '{print $1+$2}'`-`echo $gene $position|awk '{print $1+$2+1300}'` |bcftools consensus -s $patient /data1/antoine/genome_seq/ALL.chr1.phase3_shapeit2_mvncall_integrated_v5a.20130502.genotypes.vcf.gz|sed "s/^>\(.*\)/>chr$patient:$position:\1/"
+echo `date +%s%N` $before| awk '{print $1-$2}'
+

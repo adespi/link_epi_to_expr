@@ -1,0 +1,8 @@
+calculate average coefficient for each epigenome marks
+
+smoothen correlation
+PCA on expression, delete 5 first Components to delete confounding factors
+only analyse coding genes, and if possible only TF
+Correlate log of expression
+
+
