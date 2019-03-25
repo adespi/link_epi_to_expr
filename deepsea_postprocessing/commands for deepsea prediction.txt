@@ -1,0 +1,19 @@
+source activate kipoi-DeepSEA__predict
+
+kipoi get-example DeepSEA/predict -o example
+kipoi predict DeepSEA/predict \
+  --dataloader_args='{"intervals_file": "example/intervals_file", "fasta_file": "example/fasta_file"}' \
+  -o '/tmp/DeepSEA|predict.example_pred.tsv'
+# check the results
+head '/tmp/DeepSEA|predict.example_pred.tsv'
+head '/tmp/DeepSEA|predict.example_pred.tsv'|cut -f 1-5,826,842,855,867,879,891,905
+
+
+
+get interesting columns:
+grep "H3K9ac" feature_name|cut -f1|sed "s/\n/,/g"
+837,851,863,874,885,896,908
+at columns in file
+echo `grep -n '837\|851\|863\|874\|885\|896\|908' feature_output_order2|cut -f1 -d:|awk '{print $0+5}'`|sed "s/ /,/g"
+826,842,855,867,879,891,905
+head '/tmp/DeepSEA|predict.example_pred.tsv'|cut -f 1-5,826,842,855,867,879,891,905
