@@ -51,9 +51,10 @@ for g in sorted(glob.glob("temp/"+sys.argv[1]+"/fa_output/out"+sys.argv[1]+"_*.f
 
 start_cor = datetime.datetime.now()
 correlations=np.empty([919,sys.argv[2]])
+np.seterr(invalid='ignore')
 for i in range(sys.argv[2]):
     correlations[:,i]=np.corrcoef(np.transpose(answ[i,:,:]),expr)[-1][:-1]
-
+np.seterr(invalid='warn')
 #print(i)
 
 column_names = np.arange(sys.argv[4],sys.argv[6],sys.argv[5])-1-sys.argv[6]/2
