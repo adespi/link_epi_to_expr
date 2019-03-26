@@ -7,7 +7,7 @@ overall_start=`date`
 #less nbr_snp_per_gene |sort -nr|less
 #TO EXTRACT FA SEQ:
 for TF in `tac $list_of_genes |sed '$d'|cut -f1`;do
-   echo "Computing for gene "`grep "$TF" $list_of_genes |cut -f6`"   "`date`
+   echo -ne "Analysing gene "`grep "$TF" $list_of_genes |cut -f6`"   "`date`"\t\t\t\t\r"
    read -r chromosome gene <<<$(less ../data/geuvadis_expression/GD462.GeneQuantRPKM.50FN.samplename.resk10.txt.gz |cut -f1-5|grep $TF|cut -f3-4)
 #   read -r chromosome gene <<<$(less ../data/geuvadis_expression/GD462.GeneQuantRPKM.50FN.samplename.resk10.txt.gz |cut -f1-5|grep $TF|cut -f3-4)
    gene_name=`grep "$TF" $list_of_genes |cut -f6`
@@ -16,7 +16,7 @@ for TF in `tac $list_of_genes |sed '$d'|cut -f1`;do
       continue
    fi
    #for gene in `less nbr_snp_per_gene_500kb |sort -nr|sed "s/^ *//"|cut -f2 -d ' '|head -n 7`;do
-   echo "gene $gene_name chr $chromosome position $gene, window size = $window_size, window step = $window_step"
+   echo "gene $gene_name chr $chromosome position $gene, window size = $window_size, window step = $window_step "`date`
    echo $(for DIRECTORY in temp/ temp/`echo $chromosome'_'$gene`/ temp/`echo $chromosome'_'$gene`/intervals/ temp/`echo $chromosome'_'$gene`/fa_output/ temp/`echo $chromosome'_'$gene`/expression/ ;do
       if [ ! -d "$DIRECTORY" ]; then
          mkdir "$DIRECTORY";
