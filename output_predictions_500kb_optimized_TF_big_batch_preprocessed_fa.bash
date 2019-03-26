@@ -3,18 +3,15 @@
 overall_start=`date`
 #cd ~/link_epi_to_expr/
 #CREATE DIRECTORIES
-
-window_size=500000
-window_step=100
-
+. ./config
 #less nbr_snp_per_gene |sort -nr|less
 #TO EXTRACT FA SEQ:
-for TF in `tac gene_info_some_genes.txt |sed '$d'|cut -f1`;do
-   echo "Computing for gene "`grep "$TF" gene_info_some_genes.txt |cut -f6`"   "`date`
-   read -r chromosome gene <<<$(less /data1/antoine/geuvadis_expression/GD462.GeneQuantRPKM.50FN.samplename.resk10.txt.gz |cut -f1-5|grep $TF|cut -f3-4)
-#   read -r chromosome gene <<<$(less /data1/antoine/geuvadis_expression/GD462.GeneQuantRPKM.50FN.samplename.resk10.txt.gz |cut -f1-5|grep $TF|cut -f3-4)
-   gene_name=`grep "$TF" gene_info_some_genes.txt |cut -f6`
-   if [ "$chromosome" = '' ] || [ -e 'correlations_para/correlations_'$chromosome'_'$gene'_'$gene_name'.csv.gz' ] || [ -e 'correlations_para/correlations_'$chromosome'_'$gene'_'$gene_name'.csv' ] || [ -e 'correlations_done/correlations_'$chromosome'_'$gene'_'$gene_name'.csv.gz' ] || [ -e 'correlations_done/correlations_'$chromosome'_'$gene'_'$gene_name'.csv' ]
+for TF in `tac $list_of_genes |sed '$d'|cut -f1`;do
+   echo "Computing for gene "`grep "$TF" $list_of_genes |cut -f6`"   "`date`
+   read -r chromosome gene <<<$(less ../data/geuvadis_expression/GD462.GeneQuantRPKM.50FN.samplename.resk10.txt.gz |cut -f1-5|grep $TF|cut -f3-4)
+#   read -r chromosome gene <<<$(less ../data/geuvadis_expression/GD462.GeneQuantRPKM.50FN.samplename.resk10.txt.gz |cut -f1-5|grep $TF|cut -f3-4)
+   gene_name=`grep "$TF" $list_of_genes |cut -f6`
+   if [ "$chromosome" = '' ] || [ -e 'correlations_para/correlations_'$chromosome'_'$gene'_'$gene_name'.csv.gz' ] || [ -e 'correlations_para/correlations_'$chromosome'_'$gene'_'$gene_name'.csv' ] || [ -e 'correlations_done/correlations_'$chromosome'_'$gene'_'$gene_name'.csv.gz' ] || [ -e 'correlations_done/correlations_'$chromosome'_'$gene'_'$gene_name'.csv' ] || [ ! -d 'temp/'`echo $chromosome'_'$gene`'/' ]
    then
       continue
    fi
@@ -32,7 +29,7 @@ for TF in `tac gene_info_some_genes.txt |sed '$d'|cut -f1`;do
    start=`date`
    : <<'END_COMMENT'
    for patient in `more list_commun_patients`;do
-      samtools faidx /data1/antoine/hs37d5.fa.gz $chromosome:`echo $gene $window_size |awk '{print $1<$2/2 ? 1 : $1-$2/2}'`-`echo $(($gene + $window_size/2 +1000))` | bcftools consensus -i 'type="snp"' -s $patient /data1/antoine/genome_seq/ALL.chr$chromosome.phase3_shapeit2_mvncall_integrated_v*.20130502.genotypes.vcf.gz | sed "s/^>\(.*\)/>$patient:\1/" | bgzip > temp/`echo $chromosome'_'$gene`/fa_output/out`echo $chromosome'_'$gene'_'$patient`.fa.gz 2>/dev/null
+      samtools faidx ../data/hs37d5.fa.gz $chromosome:`echo $gene $window_size |awk '{print $1<$2/2 ? 1 : $1-$2/2}'`-`echo $(($gene + $window_size/2 +1000))` | bcftools consensus -i 'type="snp"' -s $patient ../data/genome_seq/ALL.chr$chromosome.phase3_shapeit2_mvncall_integrated_v*.20130502.genotypes.vcf.gz | sed "s/^>\(.*\)/>$patient:\1/" | bgzip > temp/`echo $chromosome'_'$gene`/fa_output/out`echo $chromosome'_'$gene'_'$patient`.fa.gz 2>/dev/null
    done
    fa_out_end=`date`
    echo -ne "converting fa to kipoi input...           \r"
@@ -51,24 +48,28 @@ END_COMMENT
       done > "temp/`echo $chromosome'_'$gene`/intervals/`basename $file .gz`"
    done
    create_intervals=`date`
-   less /data1/antoine/geuvadis_expression/GD462.GeneQuantRPKM.50FN.samplename.resk10.txt.gz |grep -e '^T' -e $'\t'$chromosome$'\t'$gene$'\t'>temp/`echo $chromosome'_'$gene`/expression/`echo $chromosome'_'$gene`.tsv
+   less ../data/geuvadis_expression/GD462.GeneQuantRPKM.50FN.samplename.resk10.txt.gz |grep -e '^T' -e $'\t'$chromosome$'\t'$gene$'\t'>temp/`echo $chromosome'_'$gene`/expression/`echo $chromosome'_'$gene`.tsv
+END_COMMENT
    if [ ! -d "correlations_para/" ]; then
       mkdir "correlations_para/";
    fi
-END_COMMENT
    echo -ne "predicting epigenome...           \r"
-   if [ `nvidia-smi -i 0 --query-gpu=utilization.memory --format=csv,noheader,nounits` -lt `nvidia-smi -i 1 --query-gpu=utilization.memory --format=csv,noheader,nounits` ];
-   then
-      CUDA_VISIBLE_DEVICES=0 python python_prediction.py `echo $chromosome'_'$gene` $(echo `seq $seq_arg|wc -l`) $gene_name $seq_arg
+   if [ `command -v nvidia-smi` ]; then
+      if [ `nvidia-smi -i 0 --query-gpu=utilization.memory --format=csv,noheader,nounits` -lt `nvidia-smi -i 1 --query-gpu=utilization.memory --format=csv,noheader,nounits` ];
+      then
+         CUDA_VISIBLE_DEVICES=0 python python_prediction.py `echo $chromosome'_'$gene` $(echo `seq $seq_arg|wc -l`) $gene_name $seq_arg $python_batch_size
+      else
+         echo `echo $chromosome'_'$gene` $(echo `seq $seq_arg|wc -l`) $gene_name $seq_arg
+         CUDA_VISIBLE_DEVICES=1 python python_prediction.py `echo $chromosome'_'$gene` $(echo `seq $seq_arg|wc -l`) $gene_name $seq_arg $python_batch_size
+      fi
    else
-      echo `echo $chromosome'_'$gene` $(echo `seq $seq_arg|wc -l`) $gene_name $seq_arg
-      CUDA_VISIBLE_DEVICES=1 python python_prediction.py `echo $chromosome'_'$gene` $(echo `seq $seq_arg|wc -l`) $gene_name $seq_arg
+      python python_prediction.py `echo $chromosome'_'$gene` $(echo `seq $seq_arg|wc -l`) $gene_name $seq_arg $python_batch_size
    fi
    python_end=`date`
    #rm -r temp/`echo $chromosome'_'$gene`/
    echo -e "started at "$start",\nfa_output_end at "$fa_out_end",\ncreate_intervals end at "$create_intervals",\npython ended at "$python_end>correlations_para/time_for_`echo $chromosome'_'$gene'_'$gene_name`.txt) > /dev/null 2>&1 &
-   #sleep 900
-   while [ 3 -lt `jobs -p | grep "^[0-9]"| wc -l` ]
+   #sleep $wait_time_between_two_batches
+   while [ $(($nbr_para_tasks-1)) -lt `jobs -p | grep "^[0-9]"| wc -l` ]
    do
       sleep 60
    done

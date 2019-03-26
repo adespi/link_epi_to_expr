@@ -16,13 +16,13 @@ old_stdout = sys.stdout
 sys.stdout = open(os.devnull, "w")
 model = kipoi.get_model('DeepSEA/predict')
 sys.stdout = old_stdout
-batch_size=100
-#sys.argv=[" ","5_158526788",5000,"gene_name",1,100,500000]
-#sys.argv=[" ","9_37034476",5000,"PAX5",1,100,500000]
+#sys.argv=[" ","5_158526788",5000,"gene_name",1,100,500000,100]
+#sys.argv=[" ","9_37034476",5000,"PAX5",1,100,500000,100]
 sys.argv[2]=int(sys.argv[2])
 sys.argv[4]=int(sys.argv[4])
 sys.argv[5]=int(sys.argv[5])
 sys.argv[6]=int(sys.argv[6])
+batch_size=int(sys.argv[7])
 #print(sys.argv[1])
 with open("temp/"+sys.argv[1]+"/expression/"+sys.argv[1]+".tsv") as f:
     content = f.readlines()
