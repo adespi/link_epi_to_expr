@@ -11,3 +11,19 @@ standardise expression data (centrer reduire)
 calculate correlation without cor() by matrix multiplication
 show correlation for 1 point (expression=f(prediction))  forpatient(predictions$max_pred predictions$expression)
 bcftools dosage (0,1,2) > eqtl, correlate genome with express
+
+For each gene :
+- Output seq/patient
+- for each pos:
+- run kipoi on batch size as big as can be (GPU cuda (this part most likely python))
+- calculate correlations with matrix multiplication
+
+
+Label
+Explain code
+Empirical Bayes frd
+Position/negative Corr, add std
+Figures resolution
+Graph variational auto encoder
+Representation learning on networks
+Statistical test to store only important positions and marks
