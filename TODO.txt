@@ -5,4 +5,8 @@ PCA on expression, delete 5 first Components to delete confounding factors
 only analyse coding genes, and if possible only TF
 Correlate log of expression
 
-
+plot density + interesting points with ggplot instead of R
+standardise expression data (centrer reduire)
+calculate correlation without cor() by matrix multiplication
+show correlation for 1 point (expression=f(prediction))  forpatient(predictions$max_pred predictions$expression)
+bcftools dosage (0,1,2) > eqtl, correlate genome with express
