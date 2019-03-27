@@ -2,21 +2,8 @@ TODO:
 calculate average coefficient for each epigenome marks
 
 smoothen correlation
-PCA on expression, delete 5 first Components to delete confounding factors
-only analyse coding genes, and if possible only TF
-Correlate log of expression
-
 plot density + interesting points with ggplot instead of R
-standardise expression data (centrer reduire)
-calculate correlation without cor() by matrix multiplication
-show correlation for 1 point (expression=f(prediction))  forpatient(predictions$max_pred predictions$expression)
 bcftools dosage (0,1,2) > eqtl, correlate genome with express
-
-For each gene :
-- Output seq/patient
-- for each pos:
-- run kipoi on batch size as big as can be (GPU cuda (this part most likely python))
-- calculate correlations with matrix multiplication
 
 
 Label
@@ -27,3 +14,13 @@ Figures resolution
 Graph variational auto encoder
 Representation learning on networks
 Statistical test to store only important positions and marks
+
+DONE:
+PCA on expression, delete 5 first Components to delete confounding factors ==> files already formated like this
+only analyse coding genes, and if possible only TF ==> done list_genes
+Correlate log of expression ==> files already formated like this
+standardise expression data (centrer reduire) ==> files already formated like this
+calculate correlation without cor() by matrix multiplication ==> use python instead of R achieves this
+show correlation for 1 point (expression=f(prediction))  forpatient(predictions$max_pred predictions$expression) ==> jupyter notebook
+run kipoi with python to run on bigger batches and not build the model all over again ==> new script python_prediction.py
+run on GPU ==> recreate deepsea environement with --gpu tag, install nvidia drivers
