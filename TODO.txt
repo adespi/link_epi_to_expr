@@ -1,3 +1,4 @@
+TODO:
 calculate average coefficient for each epigenome marks
 
 smoothen correlation
