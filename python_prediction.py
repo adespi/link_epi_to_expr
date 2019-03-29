@@ -10,6 +10,10 @@ import numpy as np
 import datetime
 import warnings
 import pandas as pd
+
+#go to folder where scrpit is. Enables lauch of script from any folder
+os.chdir(os.path.dirname(os.path.realpath(__file__)))
+
 start = datetime.datetime.now()
 
 old_stdout = sys.stdout
