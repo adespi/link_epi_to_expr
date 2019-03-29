@@ -1,22 +1,23 @@
 #!/bin/bash
+#this scrip is the same as output_predictions_500kb_optimized_TF_big_batch.bash except that it skips the fa output part
 #avant de lancer le script : source activate kipoi-DeepSEA__predict
 overall_start=`date`
-#cd ~/link_epi_to_expr/
-#CREATE DIRECTORIES
+#to lauch the script from any directory
+cd `dirname $0`
+#import configuration settings, not synced with git, independant on every computer
 . ./config
-#less nbr_snp_per_gene |sort -nr|less
-#TO EXTRACT FA SEQ:
+
+#loop to go through all the TFs in the list
 for TF in `tac $list_of_genes |sed '$d'|cut -f1`;do
    echo -ne "Analysing gene "`grep "$TF" $list_of_genes |cut -f6`"   "`date`"\t\t\t\t\r"
    read -r chromosome gene <<<$(less ../data/geuvadis_expression/GD462.GeneQuantRPKM.50FN.samplename.resk10.txt.gz |cut -f1-5|grep $TF|cut -f3-4)
-#   read -r chromosome gene <<<$(less ../data/geuvadis_expression/GD462.GeneQuantRPKM.50FN.samplename.resk10.txt.gz |cut -f1-5|grep $TF|cut -f3-4)
    gene_name=`grep "$TF" $list_of_genes |cut -f6`
    if [ "$chromosome" = '' ] || [ -e 'correlations_para/correlations_'$chromosome'_'$gene'_'$gene_name'.csv.gz' ] || [ -e 'correlations_para/correlations_'$chromosome'_'$gene'_'$gene_name'.csv' ] || [ -e 'correlations_done/correlations_'$chromosome'_'$gene'_'$gene_name'.csv.gz' ] || [ -e 'correlations_done/correlations_'$chromosome'_'$gene'_'$gene_name'.csv' ] || [ ! -d 'temp/'`echo $chromosome'_'$gene`'/' ]
    then
       continue
    fi
-   #for gene in `less nbr_snp_per_gene_500kb |sort -nr|sed "s/^ *//"|cut -f2 -d ' '|head -n 7`;do
    echo "Computing for gene $gene_name chr $chromosome position $gene, window size = $window_size, window step = $window_step "`date`
+   #new shell to filter the stderr
    echo $(for DIRECTORY in temp/ temp/`echo $chromosome'_'$gene`/ temp/`echo $chromosome'_'$gene`/intervals/ temp/`echo $chromosome'_'$gene`/fa_output/ temp/`echo $chromosome'_'$gene`/expression/ ;do
       if [ ! -d "$DIRECTORY" ]; then
          mkdir "$DIRECTORY";
