@@ -18,9 +18,63 @@ for (x in 1:919) {
   #plot(fdr.out$qval<0.05)#,ylim=c(0, 0.05))
   #title(main = paste(gene,"q-values for one mark :",x))
 }
-write.csv(qvals, file = "qvals.tsv",sep="\t")
-plot(apply(qvals,2,min))
+#qvals=qvals[sample(nrow(qvals)),]
+coefs=c(1)
+corr=cor(t(qvals))
+sd(qvals[1,])
+min(qvals)
+'#corr[is.na(corr)]=0
+corr=as.vector(corr)
+corr=corr[corr!=1]
+plot(sort(corr))
+median(corr)
+mean(corr)
+min(corr)
+max(corr)'
+for (x in 2:919) {
+  f=1
+  for (y in (1:(x-1))){
+    f=f- abs(corr[y, x])*coefs[y]
+  }
+  coefs=append(coefs,max(0,f))
+  print(x)
+}
+plot(coefs)
+library("matrixStats", lib.loc="~/R/x86_64-pc-linux-gnu-library/3.5")
+qvl=as.matrix((qvals^(coefs)))
+qvl[is.na(qvl)]=1
+qvl=colProds(qvl)
+#qvl[1:15]
+plot(qvl)
+#qvl1=qvl
+#k=rownames(as.data.frame(sort(apply(qvals, 2,mean))))
+k=as.integer(gsub("X","",rownames(as.data.frame(sort(apply(qvals, 2,mean))))))
+plot(qvl,qvl1)
+plot(qvl,as.matrix(apply(qvals, 2,min)))
+###plot(as.matrix(apply(qvals, 2,min)),as.matrix(apply(qvals<p, 2,sum)),xlim=c(0,0.05))
+plot(as.matrix(apply(qvals, 2,min)),as.matrix(apply(qvals<p, 2,sum)),xlim=c(0,0.05))
+good_points=as.matrix(apply(qvals<p, 2,sum))>0
+sum(good_points)
+points(as.matrix(apply(qvals, 2,min))[good_points],as.matrix(apply(qvals<p, 2,sum))[good_points],col='red',pch=19)
+plot(qvl,log(as.matrix(apply(qvals<p, 2,sum))))
+plot(apply(qvals, 2,mean))
+plot(apply(qvals, 2,min))
+plot(apply(qvals, 1,min))
+plot(apply(qvals<p, 2,sum))
+abline(h=sum(qvl<p))
+
+
+plot()
+
+#colProds(matrix(1:12, nrow = 3, ncol = 4)^c(1,2,3))
+
+""
+
+
+write.csv(qvals, file = "qvals.csv")
+plot(apply(qvals,1,min))
 which.max(apply(qvals<0.05, 2,sum))
+plot(apply(qvals<0.05, 1,sum))
 cols2 <- colorRampPalette(c("blue","white"))(256)
 image(as.matrix(t(qvals)),  col = cols2, zlim=c(0, 0.05))
 title(main="image of the qvalues",
