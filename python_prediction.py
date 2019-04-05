@@ -83,10 +83,10 @@ with open('deepsea_postprocessing/predictor.names') as f:
     row_names = f.read().splitlines()
 
 df = pd.DataFrame(correlations, columns=column_names, index=row_names)
-df.to_csv("correlations_para/correlations_"+sys.argv[1]+"_"+sys.argv[3]+".csv.gz")
+df.to_csv("correlations/correlations_"+sys.argv[1]+"_"+sys.argv[3]+".csv.gz")
 #np.savez_compressed(/"+sys.argv[1]+"/fa_output/out"+sys.argv[1]+"_*.fa.gz',answ) #53 34
-#np.savetxt("correlations_para/correlations_"+sys.argv[1]+"_"+sys.argv[3]+".csv", correlations, delimiter=",")
+#np.savetxt("correlations/correlations_"+sys.argv[1]+"_"+sys.argv[3]+".csv", correlations, delimiter=",")
 
-test_time = open("correlations_para/correlations_"+sys.argv[1]+"_"+sys.argv[3]+".time", 'w')
+test_time = open("correlations/correlations_"+sys.argv[1]+"_"+sys.argv[3]+".time", 'w')
 test_time.write(str(start)+"\n"+str(start_cor)+"\n"+str(datetime.datetime.now()))
 test_time.close()

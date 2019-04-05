@@ -11,7 +11,7 @@ for TF in `tac $list_of_genes |sed '$d'|cut -f1`;do
    echo -ne "Analysing gene "`grep "$TF" $list_of_genes |cut -f6`"   "`date`"\t\t\t\t\r"
    read -r chromosome gene <<<$(less ../data/geuvadis_expression/GD462.GeneQuantRPKM.50FN.samplename.resk10.txt.gz |cut -f1-5|grep $TF|cut -f3-4)
    gene_name=`grep "$TF" $list_of_genes |cut -f6`
-   if [ "$chromosome" = '' ] || [ -e 'correlations_para/correlations_'$chromosome'_'$gene'_'$gene_name'.csv.gz' ] || [ -e 'correlations_para/correlations_'$chromosome'_'$gene'_'$gene_name'.csv' ] || [ -e 'correlations_done/correlations_'$chromosome'_'$gene'_'$gene_name'.csv.gz' ] || [ -e 'correlations_done/correlations_'$chromosome'_'$gene'_'$gene_name'.csv' ]
+   if [ "$chromosome" = '' ] || [ -e 'correlations/correlations_'$chromosome'_'$gene'_'$gene_name'.csv.gz' ] || [ -e 'correlations/correlations_'$chromosome'_'$gene'_'$gene_name'.csv' ] || [ -e 'correlations_done/correlations_'$chromosome'_'$gene'_'$gene_name'.csv.gz' ] || [ -e 'correlations_done/correlations_'$chromosome'_'$gene'_'$gene_name'.csv' ]
    then
       continue
    fi
@@ -49,8 +49,8 @@ for TF in `tac $list_of_genes |sed '$d'|cut -f1`;do
    less ../data/geuvadis_expression/GD462.GeneQuantRPKM.50FN.samplename.resk10.txt.gz |grep -e '^T' -e $'\t'$chromosome$'\t'$gene$'\t'>temp/`echo $chromosome'_'$gene`/expression/`echo $chromosome'_'$gene`.tsv
 
 
-   if [ ! -d "correlations_para/" ]; then
-      mkdir "correlations_para/";
+   if [ ! -d "correlations/" ]; then
+      mkdir "correlations/";
    fi
 
    #predict epigenome marks using a python script, if on eor more GPUs are avaivable, we use the GPU with the most RAM available
@@ -71,10 +71,10 @@ for TF in `tac $list_of_genes |sed '$d'|cut -f1`;do
    if [ ! -d "correlations_small/" ]; then
       mkdir "correlations_small/";
    fi
-   Rscript correlation_to_qvalue_single.R "correlations_para/correlations_"`echo $chromosome'_'$gene`"_"$gene_name".csv.gz"
+   Rscript correlation_to_qvalue_single.R "correlations/correlations_"`echo $chromosome'_'$gene`"_"$gene_name".csv.gz"
 
    #rm -r temp/`echo $chromosome'_'$gene`/
-   echo -e "started at "$start",\nfa_output_end at "$fa_out_end",\ncreate_intervals end at "$create_intervals",\npython ended at "$python_end>correlations_para/time_for_`echo $chromosome'_'$gene'_'$gene_name`.txt) > /dev/null 2>&1 &
+   echo -e "started at "$start",\nfa_output_end at "$fa_out_end",\ncreate_intervals end at "$create_intervals",\npython ended at "$python_end>correlations/time_for_`echo $chromosome'_'$gene'_'$gene_name`.txt) > /dev/null 2>&1 &
    sleep $wait_time_between_two_batches
 
    #pause the script in order to have only $nbr_para_tasks jobs running at the same time

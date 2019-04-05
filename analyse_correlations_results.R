@@ -26,7 +26,7 @@ for (position in seq(1,length(csvbin))){
 
 csvbin[is.na(csvbin)] <- 0
 
-for (file in Sys.glob(paste("correlations_para/*.csv.gz",sep=''))){
+for (file in Sys.glob(paste("correlations/*.csv.gz",sep=''))){
    csv<-read.csv(file,head=T)
    csv[1]<- list(NULL)
    jpeg(paste(file,'.jpg',sep=''))

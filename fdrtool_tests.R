@@ -1,7 +1,7 @@
 setwd("~/mit_internship/link_epi_to_expr")
 library("fdrtool")
-file<-'correlations_para/correlations_17_17740325_SREBF1.csv.gz'
-file<-'correlations_para/correlations_2_127864931_BIN1.csv.gz'
+file<-'correlations/correlations_17_17740325_SREBF1.csv.gz'
+file<-'correlations/correlations_2_127864931_BIN1.csv.gz'
 csv<-read.csv(file,head=T)
 file<-gsub("[/.]", "_", file)
 gene<-strsplit(file, '_')[[1]][6]

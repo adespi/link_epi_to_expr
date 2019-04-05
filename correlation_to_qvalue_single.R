@@ -2,8 +2,8 @@ args = commandArgs(trailingOnly = TRUE)
 if (length(args) == 0) {
   stop("Please specify a file", call. = FALSE)
 }
-#file<-'correlations_para/correlations_17_17740325_SREBF1.csv.gz'
-#file<-'correlations_para/correlations_2_127864931_BIN1.csv.gz'
+#file<-'correlations/correlations_17_17740325_SREBF1.csv.gz'
+#file<-'correlations/correlations_2_127864931_BIN1.csv.gz'
 file <- args[1]
 library("fdrtool")
 p <- 0.05

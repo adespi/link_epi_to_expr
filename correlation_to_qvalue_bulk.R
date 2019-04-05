@@ -1,8 +1,8 @@
 library("fdrtool")
 p <- 0.05
-#file<-'correlations_para/correlations_17_17740325_SREBF1.csv.gz'
-#file<-'correlations_para/correlations_2_127864931_BIN1.csv.gz'
-for (file in Sys.glob(paste("correlations_para/*.csv.gz", sep = ''))) {
+#file<-'correlations/correlations_17_17740325_SREBF1.csv.gz'
+#file<-'correlations/correlations_2_127864931_BIN1.csv.gz'
+for (file in Sys.glob(paste("correlations/*.csv.gz", sep = ''))) {
   print(file)
   csv <- read.csv(file, head = T, check.names = F)
   gene <- strsplit(gsub("[/.]", "_", file), '_')[[1]][6]
