@@ -67,6 +67,13 @@ END_COMMENT
       python python_prediction.py `echo $chromosome'_'$gene` $(echo `seq $seq_arg|wc -l`) $gene_name $seq_arg $python_batch_size
    fi
    python_end=`date`
+
+   #convert correlation table to qvalues for each position
+   if [ ! -d "correlations_small/" ]; then
+      mkdir "correlations_small/";
+   fi
+   Rscript correlation_to_qvalue_single.R "correlations_para/correlations_"`echo $chromosome'_'$gene`"_"$gene_name".csv.gz"
+
    #rm -r temp/`echo $chromosome'_'$gene`/
    echo -e "started at "$start",\nfa_output_end at "$fa_out_end",\ncreate_intervals end at "$create_intervals",\npython ended at "$python_end>correlations_para/time_for_`echo $chromosome'_'$gene'_'$gene_name`.txt) > /dev/null 2>&1 &
    #sleep $wait_time_between_two_batches

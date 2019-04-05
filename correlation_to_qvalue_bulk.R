@@ -11,7 +11,7 @@ for (file in Sys.glob(paste("correlations_para/*.csv.gz", sep = ''))) {
   csv[1] <- list(NULL)
   csv[is.na(csv)] <- 0
   
-  qvals = data.frame(matrix(ncol = 5000, nrow = 919))
+  qvals = data.frame(matrix(ncol = length(colnames(csv)), nrow = 919))
   rownames(qvals)=rownames(csv)
   colnames(qvals)=colnames(csv)
   for (x in 1:919) {
