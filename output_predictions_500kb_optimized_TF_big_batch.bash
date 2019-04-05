@@ -27,12 +27,13 @@ for TF in `tac $list_of_genes |sed '$d'|cut -f1`;do
 
    #output fa for every patient (500kb around the interesting position)
    if [ $output_fa ]; then
-   echo -ne "outputing fa...           \r"
-   start=`date`
-   for patient in `more list_commun_patients`;do
-      samtools faidx ../data/hs37d5.fa.gz $chromosome:`echo $gene $window_size |awk '{print $1<$2/2 ? 1 : $1-$2/2}'`-`echo $(($gene + $window_size/2 +1000))` | bcftools consensus -i 'type="snp"' -s $patient -H A ../data/genome_seq/ALL.chr$chromosome.phase3_shapeit2_mvncall_integrated_v*.20130502.genotypes.vcf.gz 2>/dev/null | sed "s/^>\(.*\)/>$patient:\1/" | bgzip > temp/`echo $chromosome'_'$gene`/fa_output/out`echo $chromosome'_'$gene'_'$patient`.fa.gz 2>/dev/null
-   done
-   fa_out_end=`date`
+      echo -ne "outputing fa...           \r"
+      start=`date`
+      for patient in `more list_commun_patients`;do
+         samtools faidx ../data/hs37d5.fa.gz $chromosome:`echo $gene $window_size |awk '{print $1<$2/2 ? 1 : $1-$2/2}'`-`echo $(($gene + $window_size/2 +1000))` | bcftools consensus -i 'type="snp"' -s $patient -H A ../data/genome_seq/ALL.chr$chromosome.phase3_shapeit2_mvncall_integrated_v*.20130502.genotypes.vcf.gz 2>/dev/null | sed "s/^>\(.*\)/>$patient:\1/" | bgzip > temp/`echo $chromosome'_'$gene`/fa_output/out`echo $chromosome'_'$gene'_'$patient`.fa.gz 2>/dev/null
+      done
+      fa_out_end=`date`
+   fi
 
 
    #create intervals files for every patient (needed for kipoi prediction)
@@ -73,6 +74,27 @@ for TF in `tac $list_of_genes |sed '$d'|cut -f1`;do
       mkdir "correlations_small/";
    fi
    Rscript correlation_to_qvalue_single.R "correlations/correlations_"`echo $chromosome'_'$gene`"_"$gene_name".csv.gz"
+
+   rm temp/`echo $chromosome'_'$gene`/intervals/*
+   #create intervals files for every patient only for interesting positions (needed for kipoi prediction)
+   seq_arg=`echo 1 $window_step $window_size`
+
+   #for file in temp/`echo $chromosome'_'$gene`/fa_output/out`echo $chromosome'_'$gene'_'`*.fa.gz;do
+   #   name_seq=`bgzip -cd $file|head -n 1| tr -d ">"`
+   #   for x in `less correlations_small/correlations_$chromosome'_'$gene"_"$gene_name".csv.gz"|head -n 1|tr -d "\""|tr "," " "`;do
+   #      i=`printf %.0f $(echo $x+1+$window_size/2|bc)`
+   #      echo -e $name_seq"\t"$i"\t"$(($i+999))
+   #   done > "temp/`echo $chromosome'_'$gene`/intervals/`basename $file .gz`"
+   #done
+   for x in `less correlations_small/correlations_$chromosome'_'$gene"_"$gene_name".csv.gz"|head -n 1|tr -d "\""|tr "," " "`;do
+      i=`printf %.0f $(echo $x+1+$window_size/2|bc)`
+      for file in temp/`echo $chromosome'_'$gene`/fa_output/out`echo $chromosome'_'$gene'_'`*.fa.gz;do
+         name_seq=`bgzip -cd $file|head -n 1| tr -d ">"`
+         echo -e $name_seq"\t"$i"\t"$(($i+999))>> "temp/`echo $chromosome'_'$gene`/intervals/`basename $file .gz`"
+      done
+   done
+   create_intervals2=`date`
+   #ADD python python_prediction_multiple_genes.py `echo $chromosome'_'$gene` $(echo `seq $seq_arg|wc -l`) $gene_name $seq_arg $python_batch_size
 
    #rm -r temp/`echo $chromosome'_'$gene`/
    echo -e "started at "$start",\nfa_output_end at "$fa_out_end",\ncreate_intervals end at "$create_intervals",\npython ended at "$python_end>correlations/time_for_`echo $chromosome'_'$gene'_'$gene_name`.txt) > /dev/null 2>&1 &
