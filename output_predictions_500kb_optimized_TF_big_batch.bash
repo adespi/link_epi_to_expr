@@ -26,6 +26,7 @@ for TF in `tac $list_of_genes |sed '$d'|cut -f1`;do
    done
 
    #output fa for every patient (500kb around the interesting position)
+   if [ $output_fa ]; then
    echo -ne "outputing fa...           \r"
    start=`date`
    for patient in `more list_commun_patients`;do
