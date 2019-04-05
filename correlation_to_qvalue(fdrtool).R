@@ -1,4 +1,3 @@
-setwd("~/mit_internship/link_epi_to_expr")
 library("fdrtool")
 p <- 0.05
 #file<-'correlations_para/correlations_17_17740325_SREBF1.csv.gz'
