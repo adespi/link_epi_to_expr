@@ -26,14 +26,13 @@ for TF in `tac $list_of_genes |sed '$d'|cut -f1`;do
    done
 
    #output fa for every patient (500kb around the interesting position)
-   if [ $output_fa ]; then
    echo -ne "outputing fa...           \r"
-   start=`date`
-   for patient in `more list_commun_patients`;do
-      samtools faidx ../data/hs37d5.fa.gz $chromosome:`echo $gene $window_size |awk '{print $1<$2/2 ? 1 : $1-$2/2}'`-`echo $(($gene + $window_size/2 +1000))` | bcftools consensus -i 'type="snp"' -s $patient -H A ../data/genome_seq/ALL.chr$chromosome.phase3_shapeit2_mvncall_integrated_v*.20130502.genotypes.vcf.gz 2>/dev/null | sed "s/^>\(.*\)/>$patient:\1/" | bgzip > temp/`echo $chromosome'_'$gene`/fa_output/out`echo $chromosome'_'$gene'_'$patient`.fa.gz 2>/dev/null
-   done
-   fa_out_end=`date`
-
+      echo -ne "outputing fa...           \r"
+      start=`date`
+      for patient in `more list_commun_patients`;do
+         samtools faidx ../data/hs37d5.fa.gz $chromosome:`echo $gene $window_size |awk '{print $1<$2/2 ? 1 : $1-$2/2}'`-`echo $(($gene + $window_size/2 +1000))` | bcftools consensus -i 'type="snp"' -s $patient -H A ../data/genome_seq/ALL.chr$chromosome.phase3_shapeit2_mvncall_integrated_v*.20130502.genotypes.vcf.gz 2>/dev/null | sed "s/^>\(.*\)/>$patient:\1/" | bgzip > temp/`echo $chromosome'_'$gene`/fa_output/out`echo $chromosome'_'$gene'_'$patient`.fa.gz 2>/dev/null
+      done
+      fa_out_end=`date`
 
    #create intervals files for every patient (needed for kipoi prediction)
    seq_arg=`echo 1 $window_step $window_size`
