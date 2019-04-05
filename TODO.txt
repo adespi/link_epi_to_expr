@@ -1,4 +1,5 @@
 TODO:
+modify python_predictions_multiple_genes.py
 calculate average coefficient for each epigenome marks
 
 smoothen correlation
