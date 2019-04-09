@@ -1,4 +1,5 @@
 TODO:
+change output_prediction.bash to ignore files with no significant correlation during multiple expr corr
 calculate average coefficient for each epigenome marks
 
 smoothen correlation
