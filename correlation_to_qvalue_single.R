@@ -10,7 +10,7 @@ p <- 0.05
 
 print(file)
 csv <- read.csv(file, head = T, check.names = F)
-gene <- strsplit(gsub("[/.]", "_", file), "_")[[1]][6]
+gene <- tail(strsplit(gsub("[/.]", "_", file), "_")[[1]],n=3)[1]
 row.names(csv) <-
   paste(cbind(csv[1], seq(919))$X, cbind(csv[1], seq(919))$`seq(919)`)
 csv[1] <- list(NULL)
@@ -32,8 +32,6 @@ for (x in 1:919) {
 }
 qvals = apply(qvals, 2, min)
 qvals = qvals[qvals < 0.05]
-write.csv(t(qvals), file = gzfile(paste(
-  "correlations_small/", basename(file), sep = ""
-)), row.names = FALSE)
+write.csv(t(qvals), file = gzfile(gsub("correlations/","correlations_small/", file)), row.names = FALSE)
 
 warnings()
