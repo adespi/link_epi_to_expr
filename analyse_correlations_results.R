@@ -29,6 +29,7 @@ csvbin[is.na(csvbin)] <- 0
 for (file in Sys.glob(paste("correlations/*.csv.gz",sep=''))){
    csv<-read.csv(file,head=T)
    csv[1]<- list(NULL)
+   csv[is.na(csv)] <- 0
    jpeg(paste(file,'.jpg',sep=''))
    plot(apply(abs(csv),2,max))
    title(basename(file))
