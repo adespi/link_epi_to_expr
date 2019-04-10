@@ -1,0 +1,6 @@
+dosage_test_files/
+*.npy
+*.csv
+*.tsv
+.*
+!.gitignore
