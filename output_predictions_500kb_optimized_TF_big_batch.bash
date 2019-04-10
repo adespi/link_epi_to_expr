@@ -81,41 +81,43 @@ for TF in `tac $list_of_genes |sed '$d'|cut -f1`;do
 
 
    if [[ "$compute_predictions_for_all_gene_expression" == true && -e correlations_small/correlations_$chromosome'_'$gene"_"$gene_name".csv.gz" ]]; then
-      rm temp/`echo $chromosome'_'$gene`/intervals/*
-      #create intervals files for every patient only for interesting positions (needed for kipoi prediction)
-      seq_arg=`echo 1 $window_step $window_size`
+      if [ `less correlations_small/correlations_$chromosome'_'$gene"_"$gene_name".csv.gz"|wc -l` == 2 ]; then      
+         rm temp/`echo $chromosome'_'$gene`/intervals/*
+         #create intervals files for every patient only for interesting positions (needed for kipoi prediction)
+         seq_arg=`echo 1 $window_step $window_size`
 
 
-      positions_list=$(for x in `less correlations_small/correlations_$chromosome'_'$gene"_"$gene_name".csv.gz"|head -n 1|tr -d "\""|tr "," " "`;do
-         i=`printf %.0f $(echo $x+1+$window_size/2|bc)`
-         echo -e "\t"$i"\t"$(($i+999))","
-      done)
-      positions_list=`echo "${positions_list::-1}"`
-      OLDIFS=$IFS
-      for file in temp/`echo $chromosome'_'$gene`/fa_output/out`echo $chromosome'_'$gene'_'`*.fa.gz;do
-         name_seq=`bgzip -cd $file|head -n 1| tr -d ">"`
-         IFS=','
-         for x in $positions_list;do
+         positions_list=$(for x in `less correlations_small/correlations_$chromosome'_'$gene"_"$gene_name".csv.gz"|head -n 1|tr -d "\""|tr "," " "`;do
+            i=`printf %.0f $(echo $x+1+$window_size/2|bc)`
+            echo -e "\t"$i"\t"$(($i+999))","
+         done)
+         positions_list=`echo "${positions_list::-1}"`
+         OLDIFS=$IFS
+         for file in temp/`echo $chromosome'_'$gene`/fa_output/out`echo $chromosome'_'$gene'_'`*.fa.gz;do
+            name_seq=`bgzip -cd $file|head -n 1| tr -d ">"`
+            IFS=','
+            for x in $positions_list;do
+               IFS=$OLDIFS
+               echo -e $name_seq$x
+            done | tr " " "\t" > "temp/`echo $chromosome'_'$gene`/intervals/`basename $file .gz`"
             IFS=$OLDIFS
-            echo -e $name_seq$x
-         done | tr " " "\t" > "temp/`echo $chromosome'_'$gene`/intervals/`basename $file .gz`"
-         IFS=$OLDIFS
-      done
-      #name_seqs=`for file in 'temp/'$chromosome'_'$gene'/fa_output/out'$chromosome'_'$gene'_'*'.fa.gz'; do bgzip -cd $file |head -n 1| tr -d ">"; done`
-      #for x in `less correlations_small/correlations_$chromosome'_'$gene"_"$gene_name".csv.gz"|head -n 1|tr -d "\""|tr "," " "`;do
-      #   i=`printf %.0f $(echo $x+1+$window_size/2|bc)`
-      #   j=1
-      #   for file in temp/`echo $chromosome'_'$gene`/fa_output/out`echo $chromosome'_'$gene'_'`*.fa.gz;do
-      #      name_seq=`echo $name_seqs | cut -d " " -f $j`
-      #      echo -e $name_seq"\t"$i"\t"$(($i+999))>> "temp/`echo $chromosome'_'$gene`/intervals/`basename $file .gz`"
-      #      j=$(($j+1))
-      #   done
-      #done
-      create_intervals2=`date`
-      if [ ! -d "correlations/correlations_"$chromosome"_"$gene"_"$gene_name ]; then
-         mkdir "correlations/correlations_"$chromosome"_"$gene"_"$gene_name;
+         done
+         #name_seqs=`for file in 'temp/'$chromosome'_'$gene'/fa_output/out'$chromosome'_'$gene'_'*'.fa.gz'; do bgzip -cd $file |head -n 1| tr -d ">"; done`
+         #for x in `less correlations_small/correlations_$chromosome'_'$gene"_"$gene_name".csv.gz"|head -n 1|tr -d "\""|tr "," " "`;do
+         #   i=`printf %.0f $(echo $x+1+$window_size/2|bc)`
+         #   j=1
+         #   for file in temp/`echo $chromosome'_'$gene`/fa_output/out`echo $chromosome'_'$gene'_'`*.fa.gz;do
+         #      name_seq=`echo $name_seqs | cut -d " " -f $j`
+         #      echo -e $name_seq"\t"$i"\t"$(($i+999))>> "temp/`echo $chromosome'_'$gene`/intervals/`basename $file .gz`"
+         #      j=$(($j+1))
+         #   done
+         #done
+         create_intervals2=`date`
+         if [ ! -d "correlations/correlations_"$chromosome"_"$gene"_"$gene_name ]; then
+            mkdir "correlations/correlations_"$chromosome"_"$gene"_"$gene_name;
+         fi
+         python python_prediction_multiple_genes.py `echo $chromosome'_'$gene` $(more "temp/`echo $chromosome'_'$gene`/intervals/`basename $file .gz`"|wc -l) $gene_name $seq_arg $python_batch_size
       fi
-      python python_prediction_multiple_genes.py `echo $chromosome'_'$gene` $(more "temp/`echo $chromosome'_'$gene`/intervals/`basename $file .gz`"|wc -l) $gene_name $seq_arg $python_batch_size
    fi
 
 
