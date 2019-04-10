@@ -1,0 +1,14 @@
+#parameters
+nbr_para_tasks=2
+python_batch_size=20
+window_size=500000
+window_step=100
+list_of_genes=gene_info_some_genes.txt
+wait_time_between_two_batches=900
+
+#steps to go through
+output_fa=true
+compute_predictions_for_one_gene_expression=true
+convert_correlation_table_to_qvalues=true
+compute_predictions_for_all_gene_expression=true
+convert_correlation_table_to_qvalues_all_gene_expression=true

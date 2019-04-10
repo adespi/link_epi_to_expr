@@ -6,3 +6,4 @@ temp*/
 *.tsv
 .*
 !.gitignore
+config.local

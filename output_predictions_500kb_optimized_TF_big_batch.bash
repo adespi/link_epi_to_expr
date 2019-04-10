@@ -3,8 +3,12 @@
 overall_start=`date`
 #to lauch the script from any directory
 cd `dirname $0`
-#import configuration settings, not synced with git, independant on every computer
-. ./config
+#import configuration settings, to modify settings, create a copy of config as config.local in the git root directory and modify it as you want
+if [ -e config.local ]; then
+   . ./config.local
+else
+   . ./config
+fi
 
 #loop to go through all the TFs in the list
 for TF in `tac $list_of_genes |sed '$d'|cut -f1`;do
