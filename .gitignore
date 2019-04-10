@@ -1,4 +1,6 @@
 dosage_test_files/
+correlations*/
+temp*/
 *.npy
 *.csv
 *.tsv
