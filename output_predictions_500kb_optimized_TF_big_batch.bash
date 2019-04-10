@@ -55,7 +55,7 @@ for TF in `tac $list_of_genes |sed '$d'|cut -f1`;do
          mkdir "correlations/";
       fi
 
-      #predict epigenome marks using a python script, if on eor more GPUs are avaivable, we use the GPU with the most RAM available
+      #predict epigenome marks using a python script, if one or more GPUs are avaivable, we use the GPU with the most RAM available
       echo -ne "predicting epigenome...           \r"
       if [ `command -v nvidia-smi` ]; then
          if [ `nvidia-smi -i 0 --query-gpu=utilization.memory --format=csv,noheader,nounits` -lt `nvidia-smi -i 1 --query-gpu=utilization.memory --format=csv,noheader,nounits` ];
@@ -116,7 +116,18 @@ for TF in `tac $list_of_genes |sed '$d'|cut -f1`;do
          if [ ! -d "correlations/correlations_"$chromosome"_"$gene"_"$gene_name ]; then
             mkdir "correlations/correlations_"$chromosome"_"$gene"_"$gene_name;
          fi
-         python python_prediction_multiple_genes.py `echo $chromosome'_'$gene` $(more "temp/`echo $chromosome'_'$gene`/intervals/`basename $file .gz`"|wc -l) $gene_name $seq_arg $python_batch_size
+         #predict epigenome marks using a python script, if one or more GPUs are avaivable, we use the GPU with the most RAM available
+         echo -ne "predicting epigenome...           \r"
+         if [ `command -v nvidia-smi` ]; then
+            if [ `nvidia-smi -i 0 --query-gpu=utilization.memory --format=csv,noheader,nounits` -lt `nvidia-smi -i 1 --query-gpu=utilization.memory --format=csv,noheader,nounits` ];
+            then
+               CUDA_VISIBLE_DEVICES=0 python python_prediction_multiple_genes.py `echo $chromosome'_'$gene` $(more "temp/`echo $chromosome'_'$gene`/intervals/`basename $file .gz`"|wc -l) $gene_name $seq_arg $python_batch_size
+            else
+               CUDA_VISIBLE_DEVICES=1 python python_prediction_multiple_genes.py `echo $chromosome'_'$gene` $(more "temp/`echo $chromosome'_'$gene`/intervals/`basename $file .gz`"|wc -l) $gene_name $seq_arg $python_batch_size
+            fi
+         else
+            python python_prediction_multiple_genes.py `echo $chromosome'_'$gene` $(more "temp/`echo $chromosome'_'$gene`/intervals/`basename $file .gz`"|wc -l) $gene_name $seq_arg $python_batch_size
+         fi
       fi
    fi
 
