@@ -1,6 +1,4 @@
 TODO:
-change output_prediction.bash to ignore files with no significant correlation during multiple expr corr
-calculate average coefficient for each epigenome marks
 
 smoothen correlation
 plot density + interesting points with ggplot instead of R
@@ -31,3 +29,5 @@ run kipoi with python to run on bigger batches and not build the model all over 
 run on GPU ==> recreate deepsea environement with --gpu tag, install nvidia drivers
 bcftools dosage (0,1,2) : eqtl, correlate genome with express ==> new script eQTL_analysis_(bcftools_dosage).ipynb
 modify python_predictions_multiple_genes.py ==> done and integrated in pipeline
+change output_prediction.bash to ignore files with no significant correlation during multiple expr corr
+calculate average coefficient for each epigenome marks ==> done
