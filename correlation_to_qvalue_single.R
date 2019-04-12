@@ -4,10 +4,10 @@ if (length(args) == 0) {
 }
 #file<-'correlations/correlations_17_17740325_SREBF1.csv.gz'
 #file<-'correlations/correlations_2_127864931_BIN1.csv.gz'
+#file<-'correlations/correlations_20_22566093_FOXA2.csv.gz'
 file <- args[1]
 library("fdrtool")
 p <- 0.05
-
 print(file)
 csv <- read.csv(file, head = T, check.names = F)
 gene <- tail(strsplit(gsub("[/.]", "_", file), "_")[[1]],n=3)[1]
@@ -15,23 +15,22 @@ row.names(csv) <-
   paste(cbind(csv[1], seq(919))$X, cbind(csv[1], seq(919))$`seq(919)`)
 csv[1] <- list(NULL)
 csv[is.na(csv)] <- 0
+csv[apply(abs(csv), 2, max)==0] <- list(NULL)
 
-qvals = data.frame(matrix(ncol = length(colnames(csv)), nrow = 919))
+fdr.out = fdrtool(
+  as.vector(as.matrix(csv)),
+  statistic = "correlation",
+  plot = F,
+  verbose = F
+)
+
+#min(abs(csv)[matrix(fdr.out$qval,919,5000)<0.05])
+qvals = data.frame(matrix(fdr.out$qval,919,5000))
 rownames(qvals) = rownames(csv)
 colnames(qvals) = colnames(csv)
-for (x in 1:919) {
-  fdr.out = fdrtool(
-    as.vector(t(csv[x, ])),
-    statistic = "correlation",
-    plot = F,
-    verbose = F
-  )
-  qvals[x, ] = fdr.out$qval
-  #plot(fdr.out$qval<0.05)#,ylim=c(0, 0.05))
-  #title(main = paste(gene,"q-values for one mark :",x))
-}
 qvals = apply(qvals, 2, min)
 qvals = qvals[qvals < 0.05]
-write.csv(t(qvals), file = gzfile(gsub("correlations/","correlations_small/", file)), row.names = FALSE)
+write.csv(t(qvals[qvals < 0.05]), file = gzfile(gsub("correlations/","correlations_small/", file)), row.names = FALSE)
+
 
 warnings()
