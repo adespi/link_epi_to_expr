@@ -20,6 +20,7 @@ Statistical test to store only important positions and marks
 KEEP ONLY INTERESTING POSITIONS AND RERUN THE MODEL USING ALL ONLY THESE POSITIONS.
 THEN PREDICT THE GENE EXPRESSION USING A LINEAR MODEL TO COMBINE THE DIFFERENT GENE MARKS AND NOT ONLY 1 MARK
 
+after graph creation, visualise it with louvain, GEPHI or t-SNE
 
 DONE:
 PCA on expression, delete 5 first Components to delete confounding factors ==> files already formated like this
