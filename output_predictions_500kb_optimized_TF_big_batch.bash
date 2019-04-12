@@ -136,15 +136,15 @@ for TF in `tac $list_of_genes |sed '$d'|cut -f1`;do
    fi
 
 
-   if [[ "$convert_correlation_table_to_qvalues_all_gene_expression" == true && -d "correlations/correlations_"`echo $chromosome'_'$gene`"_"$gene_name ]]; then
-      #convert correlation table to qvalues for each position
-      if [ ! -d "correlations_small/correlations_"$chromosome"_"$gene"_"$gene_name ]; then
-         mkdir "correlations_small/correlations_"$chromosome"_"$gene"_"$gene_name;
-      fi
-      for file in "correlations/correlations_"`echo $chromosome'_'$gene`"_"$gene_name/*.csv.gz;do
-         Rscript correlation_to_qvalue_single.R $file
-      done
-   fi
+   #if [[ "$convert_correlation_table_to_qvalues_all_gene_expression" == true && -d "correlations/correlations_"`echo $chromosome'_'$gene`"_"$gene_name ]]; then
+   #   #convert correlation table to qvalues for each position
+   #   if [ ! -d "correlations_small/correlations_"$chromosome"_"$gene"_"$gene_name ]; then
+   #      mkdir "correlations_small/correlations_"$chromosome"_"$gene"_"$gene_name;
+   #   fi
+   #   for file in "correlations/correlations_"`echo $chromosome'_'$gene`"_"$gene_name/*.csv.gz;do
+   #      Rscript correlation_to_qvalue_single.R $file
+   #   done
+   #fi
 
 
    #rm -r temp/`echo $chromosome'_'$gene`/
