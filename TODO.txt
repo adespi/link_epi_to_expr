@@ -1,4 +1,7 @@
 TODO:
+get qvalue for other genes expression by using table cor=>qvalue
+or keep only positions where cor<(cor for qvalue of 0.05)
+play with gae
 
 smoothen correlation
 plot density + interesting points with ggplot instead of R
