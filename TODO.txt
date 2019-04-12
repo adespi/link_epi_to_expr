@@ -3,6 +3,9 @@ get qvalue for other genes expression by using table cor=>qvalue
 or keep only positions where cor<(cor for qvalue of 0.05)
 play with gae
 
+to build interaction network, test network with different threashold for : "best correlation", "nbr of correlation above : x"
+try with sort of boxplot graph comparing with high-C interaction for example
+
 smoothen correlation
 plot density + interesting points with ggplot instead of R
 bcftools dosage (0,1,2) > eqtl, correlate genome with express
