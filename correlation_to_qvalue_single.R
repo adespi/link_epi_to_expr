@@ -25,7 +25,7 @@ fdr.out = fdrtool(
 )
 
 #min(abs(csv)[matrix(fdr.out$qval,919,5000)<0.05])
-qvals = data.frame(matrix(fdr.out$qval,919,5000))
+qvals = data.frame(matrix(fdr.out$qval,919,length(colnames(csv))))
 rownames(qvals) = rownames(csv)
 colnames(qvals) = colnames(csv)
 qvals = apply(qvals, 2, min)
