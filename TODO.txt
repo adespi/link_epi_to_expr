@@ -1,4 +1,8 @@
 TODO:
+
+build network for each cell line, color network using 1 color per cell line
+look for interesting things in a disease and send it to a collaborator
+
 get qvalue for other genes expression by using table cor=>qvalue
 or keep only positions where cor<(cor for qvalue of 0.05)
 play with gae
