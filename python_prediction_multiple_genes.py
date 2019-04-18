@@ -77,11 +77,11 @@ for gene in dfexpr["TargetID"]:
     #create empty correlation file
     correlations=np.empty([919,sys.argv[2]])
     #ignore warnings when std == 0
-    np.seterr(invalid='ignore')
+    np.seterr(divide='ignore', invalid='ignore')
     #compute all the correlations
     for i in range(sys.argv[2]):
         correlations[:,i]=np.corrcoef(np.transpose(answ[i,:,:]),expr[gene_n])[-1][:-1]
-    np.seterr(invalid='warn')
+    np.seterr(divide='warn', invalid='warn')
     #print(i)
     #convert np_array to pd DataFrame to add column and row names and then save correlations to .csv.gz
     df = pd.DataFrame(correlations, columns=column_names, index=row_names)
