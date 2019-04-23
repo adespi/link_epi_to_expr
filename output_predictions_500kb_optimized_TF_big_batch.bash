@@ -131,6 +131,7 @@ for TF in `tac $list_of_genes |sed '$d'|cut -f1`;do
             fi
          else
             python python_prediction_multiple_genes.py `echo $chromosome'_'$gene` $(more "temp/`echo $chromosome'_'$gene`/intervals/`basename $file .gz`"|wc -l) $gene_name $seq_arg $python_batch_size $list_of_genes_expression
+         rm temp/`echo $chromosome'_'$gene`/intervals/*
          fi
       fi
    fi
