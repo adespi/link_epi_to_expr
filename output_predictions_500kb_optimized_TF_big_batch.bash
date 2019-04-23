@@ -23,7 +23,7 @@ for TF in `tac $list_of_genes |sed '$d'|cut -f1`;do
    #new shell make in run in parallel and to filter the stderr in output screen
    echo $(
    #output fa for every patient (500kb around the interesting position)
-   if [ "$output_fa" = true ]; then
+   if [ "$output_fa" = true ] && [ ! -d temp/`echo $chromosome'_'$gene`/fa_output/ ] ; then
       for DIRECTORY in temp/ temp/`echo $chromosome'_'$gene`/ temp/`echo $chromosome'_'$gene`/intervals/ temp/`echo $chromosome'_'$gene`/fa_output/ temp/`echo $chromosome'_'$gene`/expression/ ;do
          if [ ! -d "$DIRECTORY" ]; then
             mkdir "$DIRECTORY";
@@ -39,7 +39,7 @@ for TF in `tac $list_of_genes |sed '$d'|cut -f1`;do
       fa_out_end=`date`
    fi
 
-   if [[ "$compute_predictions_for_one_gene_expression" == true && -d temp/`echo $chromosome'_'$gene`/ ]]; then
+   if [[ "$compute_predictions_for_one_gene_expression" == true && -d temp/`echo $chromosome'_'$gene`/ && ! -e "correlations/correlations_"`echo $chromosome'_'$gene`"_"$gene_name".csv.gz" ]]; then
       #create intervals files for every patient (needed for kipoi prediction)
       seq_arg=`echo 1 $window_step $window_size`
 
@@ -75,7 +75,7 @@ for TF in `tac $list_of_genes |sed '$d'|cut -f1`;do
    fi
 
 
-   if [[ "$convert_correlation_table_to_qvalues" == true && -e "correlations/correlations_"`echo $chromosome'_'$gene`"_"$gene_name".csv.gz" ]]; then
+   if [[ "$convert_correlation_table_to_qvalues" == true && -e "correlations/correlations_"`echo $chromosome'_'$gene`"_"$gene_name".csv.gz" && ! -e correlations_small/correlations_$chromosome'_'$gene"_"$gene_name".csv.gz" ]]; then
       #convert correlation table to qvalues for each position
       if [ ! -d "correlations_small/" ]; then
          mkdir "correlations_small/";
@@ -84,7 +84,7 @@ for TF in `tac $list_of_genes |sed '$d'|cut -f1`;do
    fi
 
 
-   if [[ "$compute_predictions_for_all_gene_expression" == true && -e correlations_small/correlations_$chromosome'_'$gene"_"$gene_name".csv.gz" ]]; then
+   if [[ "$compute_predictions_for_all_gene_expression" == true && -e correlations_small/correlations_$chromosome'_'$gene"_"$gene_name".csv.gz" && ! -e "correlations/correlations_"$chromosome"_"$gene"_"$gene_name ]]; then
       if [ `less correlations_small/correlations_$chromosome'_'$gene"_"$gene_name".csv.gz"|wc -l` == 2 ]; then      
          rm temp/`echo $chromosome'_'$gene`/intervals/*
          #create intervals files for every patient only for interesting positions (needed for kipoi prediction)
@@ -125,12 +125,12 @@ for TF in `tac $list_of_genes |sed '$d'|cut -f1`;do
          if [ `command -v nvidia-smi` ]; then
             if [ `nvidia-smi -i 0 --query-gpu=utilization.memory --format=csv,noheader,nounits` -lt `nvidia-smi -i 1 --query-gpu=utilization.memory --format=csv,noheader,nounits` ];
             then
-               CUDA_VISIBLE_DEVICES=0 python python_prediction_multiple_genes.py `echo $chromosome'_'$gene` $(more "temp/`echo $chromosome'_'$gene`/intervals/`basename $file .gz`"|wc -l) $gene_name $seq_arg $python_batch_size
+               CUDA_VISIBLE_DEVICES=0 python python_prediction_multiple_genes.py `echo $chromosome'_'$gene` $(more "temp/`echo $chromosome'_'$gene`/intervals/`basename $file .gz`"|wc -l) $gene_name $seq_arg $python_batch_size $list_of_genes_expression
             else
-               CUDA_VISIBLE_DEVICES=1 python python_prediction_multiple_genes.py `echo $chromosome'_'$gene` $(more "temp/`echo $chromosome'_'$gene`/intervals/`basename $file .gz`"|wc -l) $gene_name $seq_arg $python_batch_size
+               CUDA_VISIBLE_DEVICES=1 python python_prediction_multiple_genes.py `echo $chromosome'_'$gene` $(more "temp/`echo $chromosome'_'$gene`/intervals/`basename $file .gz`"|wc -l) $gene_name $seq_arg $python_batch_size $list_of_genes_expression
             fi
          else
-            python python_prediction_multiple_genes.py `echo $chromosome'_'$gene` $(more "temp/`echo $chromosome'_'$gene`/intervals/`basename $file .gz`"|wc -l) $gene_name $seq_arg $python_batch_size
+            python python_prediction_multiple_genes.py `echo $chromosome'_'$gene` $(more "temp/`echo $chromosome'_'$gene`/intervals/`basename $file .gz`"|wc -l) $gene_name $seq_arg $python_batch_size $list_of_genes_expression
          fi
       fi
    fi
