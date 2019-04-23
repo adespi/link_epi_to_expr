@@ -1,8 +1,8 @@
 #!/home/antoine/miniconda3/envs/kipoi-DeepSEA__predict/bin/python
-#sys.argv=["program_name","chr_pos","nbr_intervals","gene_name",1,100,500000,"batch_size"]
-#sys.argv=[" ","5_158526788",5000,"EBF1",1,100,500000,20]
-#sys.argv=[" ","9_37034476",5000,"PAX5",1,100,500000,20]
-#sys.argv=[" ","2_127864931",5000,"BIN1",1,100,500000,20]
+#sys.argv=["program_name","chr_pos","nbr_intervals","gene_name",1,100,500000,"batch_size","list_of_genes_expression"]
+#sys.argv=[" ","5_158526788",5000,"EBF1",1,100,500000,20,"expression_for_some_genes_32.tsv"]
+#sys.argv=[" ","9_37034476",5000,"PAX5",1,100,500000,20,"expression_for_some_genes_32.tsv"]
+#sys.argv=[" ","2_127864931",5000,"BIN1",1,100,500000,20,"expression_for_some_genes_32.tsv"]
 #python
 import glob
 import re
@@ -33,7 +33,7 @@ sys.argv[6]=int(sys.argv[6])
 batch_size=int(sys.argv[7])
 
 #fetch expression data
-dfexpr = pd.read_csv("expression_for_some_genes.tsv", sep="\t",header = 0)
+dfexpr = pd.read_csv(sys.argv[8], sep="\t",header = 0)
 
 #create empty files for predictions and expression, will be filled in loop
 answ=np.empty([sys.argv[2],445,919])

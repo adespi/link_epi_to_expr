@@ -4,6 +4,7 @@ python_batch_size=10
 window_size=500000
 window_step=100
 list_of_genes=gene_info_some_genes.txt
+list_of_genes_expression=expression_for_some_genes.tsv
 wait_time_between_two_batches=0
 
 #steps to go through
