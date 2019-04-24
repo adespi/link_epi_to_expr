@@ -4,10 +4,15 @@ overall_start=`date`
 #to lauch the script from any directory
 cd `dirname $0`
 #import configuration settings, to modify settings, create a copy of config as config.local in the git root directory and modify it as you want
+#to update config during program, create config.update file with variables to change (beware, may cause problem)
 if [ -e config.local ]; then
    . ./config.local
 else
    . ./config
+fi
+
+if [ -e config.update ]; then
+   rm config.update
 fi
 
 #loop to go through all the TFs in the list
@@ -157,7 +162,13 @@ for TF in `tac "gene_info_"$list_of_genes".txt" |sed '$d'|cut -f1`;do
    while [ $(($nbr_para_tasks-1)) -lt `jobs -p | grep "^[0-9]"| wc -l` ]
    do
       sleep 60
+      if [ -e config.update ]; then
+         . ./config.update
+      fi
    done
+   if [ -e config.update ]; then
+      . ./config.update
+   fi
 done
 wait
 echo -e 'started the procedure at '$overall_start'\nended  the  procedure at '`date`
