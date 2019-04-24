@@ -3,8 +3,7 @@ nbr_para_tasks=2
 python_batch_size=10
 window_size=500000
 window_step=100
-list_of_genes=gene_info_some_genes.txt
-list_of_genes_expression=expression_for_some_genes.tsv
+list_of_genes=some_genes #some_genes_32_Tissue-specific_regulatory_networks_FANTOM5-v1 all_genes
 wait_time_between_two_batches=0
 
 #steps to go through

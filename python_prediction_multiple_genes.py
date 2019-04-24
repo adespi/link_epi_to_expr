@@ -1,8 +1,8 @@
 #!/home/antoine/miniconda3/envs/kipoi-DeepSEA__predict/bin/python
 #sys.argv=["program_name","chr_pos","nbr_intervals","gene_name",1,100,500000,"batch_size","list_of_genes_expression"]
-#sys.argv=[" ","5_158526788",5000,"EBF1",1,100,500000,20,"expression_for_some_genes_32.tsv"]
-#sys.argv=[" ","9_37034476",5000,"PAX5",1,100,500000,20,"expression_for_some_genes_32.tsv"]
-#sys.argv=[" ","2_127864931",5000,"BIN1",1,100,500000,20,"expression_for_some_genes_32.tsv"]
+#sys.argv=[" ","5_158526788",5000,"EBF1",1,100,500000,20,"expression_some_genes_32_Tissue-specific_regulatory_networks_FANTOM5-v1.tsv"]
+#sys.argv=[" ","9_37034476",5000,"PAX5",1,100,500000,20,"expression_some_genes_32_Tissue-specific_regulatory_networks_FANTOM5-v1.tsv"]
+#sys.argv=[" ","2_127864931",5000,"BIN1",1,100,500000,20,"expression_some_genes_32_Tissue-specific_regulatory_networks_FANTOM5-v1.tsv"]
 #python
 import glob
 import re

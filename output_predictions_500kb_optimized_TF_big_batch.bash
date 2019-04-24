@@ -11,10 +11,10 @@ else
 fi
 
 #loop to go through all the TFs in the list
-for TF in `tac $list_of_genes |sed '$d'|cut -f1`;do
+for TF in `tac "gene_info_"$list_of_genes".txt" |sed '$d'|cut -f1`;do
    echo -ne "Analysing gene "`grep "$TF" $list_of_genes |cut -f6`"   "`date`"\t\t\t\t\r"
    read -r chromosome gene <<<$(less ../data/geuvadis_expression/GD462.GeneQuantRPKM.50FN.samplename.resk10.txt.gz |cut -f1-5|grep $TF|cut -f3-4)
-   gene_name=`grep "$TF" $list_of_genes |cut -f6`
+   gene_name=`grep "$TF" "gene_info_"$list_of_genes".txt" |cut -f6`
    if [ "$chromosome" = '' ] #not used anymore because of multistep process || [ -e 'correlations/correlations_'$chromosome'_'$gene'_'$gene_name'.csv.gz' ] || [ -e 'correlations/correlations_'$chromosome'_'$gene'_'$gene_name'.csv' ] || [ -e 'correlations_done/correlations_'$chromosome'_'$gene'_'$gene_name'.csv.gz' ] || [ -e 'correlations_done/correlations_'$chromosome'_'$gene'_'$gene_name'.csv' ]
    then
       continue
@@ -125,12 +125,12 @@ for TF in `tac $list_of_genes |sed '$d'|cut -f1`;do
          if [ `command -v nvidia-smi` ]; then
             if [ `nvidia-smi -i 0 --query-gpu=utilization.memory --format=csv,noheader,nounits` -lt `nvidia-smi -i 1 --query-gpu=utilization.memory --format=csv,noheader,nounits` ];
             then
-               CUDA_VISIBLE_DEVICES=0 python python_prediction_multiple_genes.py `echo $chromosome'_'$gene` $(more "temp/`echo $chromosome'_'$gene`/intervals/`basename $file .gz`"|wc -l) $gene_name $seq_arg $python_batch_size $list_of_genes_expression
+               CUDA_VISIBLE_DEVICES=0 python python_prediction_multiple_genes.py `echo $chromosome'_'$gene` $(more "temp/`echo $chromosome'_'$gene`/intervals/`basename $file .gz`"|wc -l) $gene_name $seq_arg $python_batch_size "expression_"$list_of_genes".tsv"
             else
-               CUDA_VISIBLE_DEVICES=1 python python_prediction_multiple_genes.py `echo $chromosome'_'$gene` $(more "temp/`echo $chromosome'_'$gene`/intervals/`basename $file .gz`"|wc -l) $gene_name $seq_arg $python_batch_size $list_of_genes_expression
+               CUDA_VISIBLE_DEVICES=1 python python_prediction_multiple_genes.py `echo $chromosome'_'$gene` $(more "temp/`echo $chromosome'_'$gene`/intervals/`basename $file .gz`"|wc -l) $gene_name $seq_arg $python_batch_size "expression_"$list_of_genes".tsv"
             fi
          else
-            python python_prediction_multiple_genes.py `echo $chromosome'_'$gene` $(more "temp/`echo $chromosome'_'$gene`/intervals/`basename $file .gz`"|wc -l) $gene_name $seq_arg $python_batch_size $list_of_genes_expression
+            python python_prediction_multiple_genes.py `echo $chromosome'_'$gene` $(more "temp/`echo $chromosome'_'$gene`/intervals/`basename $file .gz`"|wc -l) $gene_name $seq_arg $python_batch_size "expression_"$list_of_genes".tsv"
          rm temp/`echo $chromosome'_'$gene`/intervals/*
          fi
       fi
