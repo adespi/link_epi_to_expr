@@ -1,6 +1,5 @@
 TODO:
 
-add config.update to change config while executing (wait time, nbr para task etc...)
 build network for each cell line, color network using 1 color per cell line
 build graph network image (2-3D)
 look for interesting things in a disease and send it to a collaborator
@@ -44,3 +43,4 @@ bcftools dosage (0,1,2) : eqtl, correlate genome with express ==> new script eQT
 modify python_predictions_multiple_genes.py ==> done and integrated in pipeline
 change output_prediction.bash to ignore files with no significant correlation during multiple expr corr
 calculate average coefficient for each epigenome marks ==> done
+add config.update to change config while executing (wait time, nbr para task etc...) ==> done
