@@ -1,5 +1,6 @@
 TODO:
 
+add config.update to change config while executing (wait time, nbr para task etc...)
 build network for each cell line, color network using 1 color per cell line
 build graph network image (2-3D)
 look for interesting things in a disease and send it to a collaborator
