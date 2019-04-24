@@ -17,7 +17,7 @@ fi
 
 #loop to go through all the TFs in the list
 for TF in `tac "gene_info_"$list_of_genes".txt" |sed '$d'|cut -f1`;do
-   echo -ne "Analysing gene "`grep "$TF" $list_of_genes |cut -f6`"   "`date`"\t\t\t\t\r"
+   echo -ne "Analysing gene "`grep "$TF" "gene_info_"$list_of_genes".txt" |cut -f6`"   "`date`"\t\t\t\t\r"
    read -r chromosome gene <<<$(less ../data/geuvadis_expression/GD462.GeneQuantRPKM.50FN.samplename.resk10.txt.gz |cut -f1-5|grep $TF|cut -f3-4)
    gene_name=`grep "$TF" "gene_info_"$list_of_genes".txt" |cut -f6`
    if [ "$chromosome" = '' ] #not used anymore because of multistep process || [ -e 'correlations/correlations_'$chromosome'_'$gene'_'$gene_name'.csv.gz' ] || [ -e 'correlations/correlations_'$chromosome'_'$gene'_'$gene_name'.csv' ] || [ -e 'correlations_done/correlations_'$chromosome'_'$gene'_'$gene_name'.csv.gz' ] || [ -e 'correlations_done/correlations_'$chromosome'_'$gene'_'$gene_name'.csv' ]
