@@ -136,8 +136,8 @@ for TF in `tac "gene_info_"$list_of_genes".txt" |sed '$d'|cut -f1`;do
             fi
          else
             python python_prediction_multiple_genes.py `echo $chromosome'_'$gene` $(more "temp/`echo $chromosome'_'$gene`/intervals/`basename $file .gz`"|wc -l) $gene_name $seq_arg $python_batch_size $list_of_genes
-         rm temp/`echo $chromosome'_'$gene`/intervals/*
          fi
+         rm temp/`echo $chromosome'_'$gene`/intervals/*
       fi
    fi
 
