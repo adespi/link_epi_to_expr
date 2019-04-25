@@ -130,12 +130,12 @@ for TF in `tac "gene_info_"$list_of_genes".txt" |sed '$d'|cut -f1`;do
          if [ `command -v nvidia-smi` ]; then
             if [ `nvidia-smi -i 0 --query-gpu=utilization.memory --format=csv,noheader,nounits` -lt `nvidia-smi -i 1 --query-gpu=utilization.memory --format=csv,noheader,nounits` ];
             then
-               CUDA_VISIBLE_DEVICES=0 python python_prediction_multiple_genes.py `echo $chromosome'_'$gene` $(more "temp/`echo $chromosome'_'$gene`/intervals/`basename $file .gz`"|wc -l) $gene_name $seq_arg $python_batch_size "expression_"$list_of_genes".tsv"
+               CUDA_VISIBLE_DEVICES=0 python python_prediction_multiple_genes.py `echo $chromosome'_'$gene` $(more "temp/`echo $chromosome'_'$gene`/intervals/`basename $file .gz`"|wc -l) $gene_name $seq_arg $python_batch_size $list_of_genes
             else
-               CUDA_VISIBLE_DEVICES=1 python python_prediction_multiple_genes.py `echo $chromosome'_'$gene` $(more "temp/`echo $chromosome'_'$gene`/intervals/`basename $file .gz`"|wc -l) $gene_name $seq_arg $python_batch_size "expression_"$list_of_genes".tsv"
+               CUDA_VISIBLE_DEVICES=1 python python_prediction_multiple_genes.py `echo $chromosome'_'$gene` $(more "temp/`echo $chromosome'_'$gene`/intervals/`basename $file .gz`"|wc -l) $gene_name $seq_arg $python_batch_size $list_of_genes
             fi
          else
-            python python_prediction_multiple_genes.py `echo $chromosome'_'$gene` $(more "temp/`echo $chromosome'_'$gene`/intervals/`basename $file .gz`"|wc -l) $gene_name $seq_arg $python_batch_size "expression_"$list_of_genes".tsv"
+            python python_prediction_multiple_genes.py `echo $chromosome'_'$gene` $(more "temp/`echo $chromosome'_'$gene`/intervals/`basename $file .gz`"|wc -l) $gene_name $seq_arg $python_batch_size $list_of_genes
          rm temp/`echo $chromosome'_'$gene`/intervals/*
          fi
       fi
