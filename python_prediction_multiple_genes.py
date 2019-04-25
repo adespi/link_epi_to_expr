@@ -1,8 +1,8 @@
 #!/home/antoine/miniconda3/envs/kipoi-DeepSEA__predict/bin/python
 #sys.argv=["program_name","chr_pos","nbr_intervals","gene_name",1,100,500000,"batch_size","list_of_genes_expression"]
-#sys.argv=[" ","5_158526788",5000,"EBF1",1,100,500000,20,"expression_some_genes_32_Tissue-specific_regulatory_networks_FANTOM5-v1.tsv"]
-#sys.argv=[" ","9_37034476",5000,"PAX5",1,100,500000,20,"expression_some_genes_32_Tissue-specific_regulatory_networks_FANTOM5-v1.tsv"]
-#sys.argv=[" ","2_127864931",5000,"BIN1",1,100,500000,20,"expression_some_genes_32_Tissue-specific_regulatory_networks_FANTOM5-v1.tsv"]
+#sys.argv=[" ","5_158526788",5000,"EBF1",1,100,500000,20,"some_genes_32_Tissue-specific_regulatory_networks_FANTOM5-v1"]
+#sys.argv=[" ","9_37034476",5000,"PAX5",1,100,500000,20,"some_genes_32_Tissue-specific_regulatory_networks_FANTOM5-v1"]
+#sys.argv=[" ","2_127864931",5000,"BIN1",1,100,500000,20,"some_genes_32_Tissue-specific_regulatory_networks_FANTOM5-v1"]
 #python
 import glob
 import re
@@ -33,7 +33,7 @@ sys.argv[6]=int(sys.argv[6])
 batch_size=int(sys.argv[7])
 
 #fetch expression data
-dfexpr = pd.read_csv(sys.argv[8], sep="\t",header = 0)
+dfexpr = pd.read_csv("expression_"+sys.argv[8]+".tsv", sep="\t",header = 0)
 
 #create empty files for predictions and expression, will be filled in loop
 answ=np.empty([sys.argv[2],445,919])
@@ -42,7 +42,7 @@ i=0
 
 #predict genomic marks and load expression for each patient
 for g in sorted(glob.glob("temp/"+sys.argv[1]+"/fa_output/out"+sys.argv[1]+"_*.fa.gz")):
-    print (i)
+    #print (i)
     dl_kwargs = {'intervals_file': 'temp/'+sys.argv[1]+'/intervals/'+os.path.splitext(os.path.basename(g))[0], 'fasta_file': g, "num_chr_fasta": "False"}
     #filter warnings to clear output
     warnings.filterwarnings('ignore',category=FutureWarning)
@@ -66,7 +66,7 @@ for g in sorted(glob.glob("temp/"+sys.argv[1]+"/fa_output/out"+sys.argv[1]+"_*.f
 start_cor = datetime.datetime.now()
 
 #informations for output file
-gene_info = pd.read_csv("gene_info_some_genes.txt", sep="\t",header = 0,index_col=0)
+gene_info = pd.read_csv("gene_info_"+sys.argv[8]+".txt", sep="\t",header = 0,index_col=0)
 column_names = list(pd.read_csv("correlations_small/correlations_"+sys.argv[1]+"_"+sys.argv[3]+".csv.gz",header = 0))
 with open('deepsea_postprocessing/predictor.names') as f:
     row_names = f.read().splitlines()
