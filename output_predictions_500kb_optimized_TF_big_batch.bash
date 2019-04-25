@@ -164,10 +164,12 @@ for TF in `tac "gene_info_"$list_of_genes".txt" |sed '$d'|cut -f1`;do
       sleep 60
       if [ -e config.update ]; then
          . ./config.update
+         rm config.update
       fi
    done
    if [ -e config.update ]; then
       . ./config.update
+      rm config.update
    fi
 done
 wait
