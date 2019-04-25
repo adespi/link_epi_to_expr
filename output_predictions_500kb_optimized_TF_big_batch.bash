@@ -156,10 +156,11 @@ for TF in `tac "gene_info_"$list_of_genes".txt" |sed '$d'|cut -f1`;do
    #rm -r temp/`echo $chromosome'_'$gene`/
    #echo -e "started at "$start",\nfa_output_end at "$fa_out_end",\ncreate_intervals end at "$create_intervals",\npython ended at "$python_end>correlations/time_for_`echo $chromosome'_'$gene'_'$gene_name`.txt
    ) > /dev/null 2>&1 &
+   sleep 5
    sleep $wait_time_between_two_batches
 
    #pause the script in order to have only $nbr_para_tasks jobs running at the same time
-   while [ $(($nbr_para_tasks-1)) -lt `jobs -p | grep "^[0-9]"| wc -l` ]
+   while [ $(($nbr_para_tasks-1)) -lt `jobs -pr | grep "^[0-9]"| wc -l` ]
    do
       sleep 60
       if [ -e config.update ]; then
