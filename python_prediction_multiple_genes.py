@@ -86,7 +86,7 @@ for gene in dfexpr["TargetID"]:
     #convert np_array to pd DataFrame to add column and row names and then save correlations to .csv.gz
     df = pd.DataFrame(correlations, columns=column_names, index=row_names)
     df.to_csv("correlations/correlations_"+sys.argv[1]+"_"+sys.argv[3]+"/"+gene_info.loc[gene][4]+".csv.gz")
-    with open("correlations/correlations_"+sys.argv[1]+"_"+sys.argv[3]+"/"+gene_info.loc[gene][4]+".csv.gz","w+") as f:
+    with open("correlations/correlations_"+sys.argv[1]+"_"+sys.argv[3]+"/"+gene_info.loc[gene][4]+".csv.gz.info","w+") as f:
         sign_cutoff=0.1550258
         f.write(str(df.abs().max().max())+"\n"+str(np.sum(((df.abs())>sign_cutoff).values)))
     gene_n+=1
