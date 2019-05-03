@@ -1,5 +1,10 @@
 TODO:
 
+plot by communitiy, better way to plot
+try to cluster patient using the expression from the interesting TF
+maybe use NETWORK COMPENDIUM TO link TF to genes, and then see if more TF-gene-TF connections appear within a cluster
+
+
 build network for each cell line, color network using 1 color per cell line
 build graph network image (2-3D)
 look for interesting things in a disease and send it to a collaborator
