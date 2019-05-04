@@ -1,7 +1,7 @@
 TODO:
 
 plot by communitiy, better way to plot
-try to cluster patient using the expression from the interesting TF
+try to cluster patient using the expression from the interesting TF (K-mean clustering)
 maybe use NETWORK COMPENDIUM TO link TF to genes, and then see if more TF-gene-TF connections appear within a cluster
 
 
