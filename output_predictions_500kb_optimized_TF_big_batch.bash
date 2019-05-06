@@ -67,7 +67,7 @@ for TF in `tac "gene_info_"$list_of_genes".txt" |sed '$d'|cut -f1`;do
       #predict epigenome marks using a python script, if one or more GPUs are avaivable, we use the GPU with the most RAM available
       echo -ne "predicting epigenome...           \r"
       if [ `command -v nvidia-smi` ]; then
-         if [ `nvidia-smi -i 0 --query-gpu=utilization.memory --format=csv,noheader,nounits` -lt `nvidia-smi -i 1 --query-gpu=utilization.memory --format=csv,noheader,nounits` ];
+         if [ `nvidia-smi -i 0 --query-gpu=memory.free --format=csv,noheader,nounits` -gt `nvidia-smi -i 1 --query-gpu=memory.free --format=csv,noheader,nounits` ];
          then
             CUDA_VISIBLE_DEVICES=0 python python_prediction.py `echo $chromosome'_'$gene` $(echo `seq $seq_arg|wc -l`) $gene_name $seq_arg $python_batch_size
          else
@@ -128,7 +128,7 @@ for TF in `tac "gene_info_"$list_of_genes".txt" |sed '$d'|cut -f1`;do
          #predict epigenome marks using a python script, if one or more GPUs are avaivable, we use the GPU with the most RAM available
          echo -ne "predicting epigenome...           \r"
          if [ `command -v nvidia-smi` ]; then
-            if [ `nvidia-smi -i 0 --query-gpu=utilization.memory --format=csv,noheader,nounits` -lt `nvidia-smi -i 1 --query-gpu=utilization.memory --format=csv,noheader,nounits` ];
+            if [ `nvidia-smi -i 0 --query-gpu=memory.free --format=csv,noheader,nounits` -gt `nvidia-smi -i 1 --query-gpu=memory.free --format=csv,noheader,nounits` ];
             then
                CUDA_VISIBLE_DEVICES=0 python python_prediction_multiple_genes.py `echo $chromosome'_'$gene` $(more "temp/`echo $chromosome'_'$gene`/intervals/`basename $file .gz`"|wc -l) $gene_name $seq_arg $python_batch_size $list_of_genes
             else
