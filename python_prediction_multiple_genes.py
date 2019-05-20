@@ -13,6 +13,7 @@ import numpy as np
 import datetime
 import warnings
 import pandas as pd
+from sklearn.preprocessing import quantile_transform
 
 #go to folder where script is. Enables lauch of script from any folder
 os.chdir(os.path.dirname(os.path.realpath(__file__)))
@@ -71,6 +72,8 @@ column_names = list(pd.read_csv("correlations_small/correlations_"+sys.argv[1]+"
 with open('deepsea_postprocessing/predictor.names') as f:
     row_names = f.read().splitlines()
 
+expr=quantile_transform(expr, output_distribution="normal", copy=True))
+
 gene_n=0
 for gene in dfexpr["TargetID"]:
     gene=gene.split(".")[0]
@@ -80,7 +83,7 @@ for gene in dfexpr["TargetID"]:
     np.seterr(divide='ignore', invalid='ignore')
     #compute all the correlations
     for i in range(sys.argv[2]):
-        correlations[:,i]=np.corrcoef(np.transpose(answ[i,:,:]),expr[gene_n])[-1][:-1]
+        correlations[:,i]=np.corrcoef(np.transpose(quantile_transform(answ[i,:,:], output_distribution="normal", copy=True)),expr[gene_n])[-1][:-1]
     np.seterr(divide='warn', invalid='warn')
     #print(i)
     #convert np_array to pd DataFrame to add column and row names and then save correlations to .csv.gz
