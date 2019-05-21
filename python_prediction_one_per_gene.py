@@ -72,8 +72,9 @@ correlations=np.empty([919,sys.argv[2]])
 #ignore warnings when std == 0
 np.seterr(divide='ignore', invalid='ignore')
 #compute all the correlations
+expr=quantile_transform(expr.reshape(-1,1), output_distribution="normal", copy=True)[:,0]
 for i in range(sys.argv[2]):
-    correlations[:,i]=np.corrcoef(np.transpose(answ[i,:,:]),expr)[-1][:-1]
+    correlations[:,i]=np.corrcoef(np.transpose(quantile_transform(answ[i,:,:],
 np.seterr(divide='warn', invalid='warn')
 #print(i)
 

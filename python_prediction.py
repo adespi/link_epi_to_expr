@@ -12,6 +12,7 @@ import numpy as np
 import datetime
 import warnings
 import pandas as pd
+import matplotlib.pyplot as plt
 from sklearn.preprocessing import quantile_transform
 
 #go to folder where script is. Enables lauch of script from any folder
@@ -84,7 +85,40 @@ column_names = np.arange(sys.argv[4],sys.argv[6],sys.argv[5])-1-sys.argv[6]/2
 with open('deepsea_postprocessing/predictor.names') as f:
     row_names = f.read().splitlines()
 
+
+
+
 df = pd.DataFrame(correlations, columns=column_names, index=row_names)
+
+position=df.abs().max().idxmax()
+position_i=df.columns.get_loc(position)
+mark=df[position_i].abs().idxmax()
+mark_i=df.index.get_loc(mark)
+X=np.copy(answ[position_i,:,mark_i])
+Y=np.copy(expr)
+X=X.reshape(-1, 1)
+Y=Y.reshape(-1, 1)
+X=quantile_transform(X, output_distribution="normal", copy=True)
+Y=quantile_transform(Y, output_distribution="normal", copy=True)
+for x in range(-5,6):
+   if len(Y[np.round(X)==x])>0:
+      a = plt.violinplot(Y[np.round(X)==x],[x])
+      for pc in a['bodies']:
+         pc.set_color('C0')
+      a['cbars'].set_color('C0')
+      a['cmins'].set_color('C0')
+      a['cmaxes'].set_color('C0')
+#plt.plot(X, Y,'.')
+plt.xlabel(mark)
+plt.ylabel(sys.argv[3]+" expression")
+plt.title("Best correlation normalized for {} ({})".format(sys.argv[3],np.corrcoef(X.reshape(-1), Y.reshape(-1))[0,1]))
+#plt.show()
+plt.savefig("correlations_small/best_correlation_normalized_{}_{}.png".format(sys.argv[1],sys.argv[3]))
+
+
+
+
+
 df.to_csv("correlations/correlations_"+sys.argv[1]+"_"+sys.argv[3]+".csv.gz")
 #np.savez_compressed(/"+sys.argv[1]+"/fa_output/out"+sys.argv[1]+"_*.fa.gz',answ) #53 34
 #np.savetxt("correlations/correlations_"+sys.argv[1]+"_"+sys.argv[3]+".csv", correlations, delimiter=",")
