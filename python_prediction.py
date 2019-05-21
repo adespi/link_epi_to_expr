@@ -92,7 +92,7 @@ df = pd.DataFrame(correlations, columns=column_names, index=row_names)
 
 position=df.abs().max().idxmax()
 position_i=df.columns.get_loc(position)
-mark=df[position_i].abs().idxmax()
+mark=df[position].abs().idxmax()
 mark_i=df.index.get_loc(mark)
 X=np.copy(answ[position_i,:,mark_i])
 Y=np.copy(expr)
