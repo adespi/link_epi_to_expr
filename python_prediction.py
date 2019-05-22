@@ -113,7 +113,7 @@ plt.xlabel(mark)
 plt.ylabel(sys.argv[3]+" expression")
 plt.title("Best correlation normalized for {} ({})".format(sys.argv[3],np.corrcoef(X.reshape(-1), Y.reshape(-1))[0,1]))
 #plt.show()
-plt.savefig("correlations_small/best_correlation_normalized_{}_{}.png".format(sys.argv[1],sys.argv[3]))
+plt.savefig("correlations/best_correlation_normalized_{}_{}.png".format(sys.argv[1],sys.argv[3]))
 
 
 
