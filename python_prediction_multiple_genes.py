@@ -72,7 +72,7 @@ column_names = list(pd.read_csv("correlations_small/correlations_"+sys.argv[1]+"
 with open('deepsea_postprocessing/predictor.names') as f:
     row_names = f.read().splitlines()
 
-expr=quantile_transform(expr, output_distribution="normal", copy=True))
+expr=quantile_transform(expr, output_distribution="normal", copy=True)
 
 gene_n=0
 for gene in dfexpr["TargetID"]:
