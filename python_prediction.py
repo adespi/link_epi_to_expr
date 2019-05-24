@@ -85,7 +85,31 @@ column_names = np.arange(sys.argv[4],sys.argv[6],sys.argv[5])-1-sys.argv[6]/2
 with open('deepsea_postprocessing/predictor.names') as f:
     row_names = f.read().splitlines()
 
+x=np.log(np.max(np.max(answ, axis=1)/np.min(answ, axis=1),axis=1))
+y=np.max(correlations,axis=0)
+plt.plot(x,y,".")
+plt.title("prediction magnitude vs correlation")
+plt.xlabel("log(magnitude)")
+plt.ylabel("correlation")
 
+plt.savefig("correlations/prediction_magnitude_vs_correlation_{}_{}".format(sys.argv[1],sys.argv[3]))
+plt.close()
+plt.hist2d(x, y, (100, 100), cmap=plt.cm.jet)
+plt.colorbar()
+plt.title("prediction magnitude vs correlation heatmap")
+plt.xlabel("log(magnitude)")
+plt.ylabel("correlation")
+
+plt.savefig("correlations/prediction_magnitude_vs_correlation_heatmap_{}_{}".format(sys.argv[1],sys.argv[3]))
+plt.close()
+
+nbr_points=np.zeros([2,2])
+nbr_points[0,0]=sum(np.logical_and(y>0.18,x<1.5))
+nbr_points[0,1]=sum(np.logical_and(y>0.18,x>1.5))
+nbr_points[1,0]=sum(np.logical_and(y<0.18,x<1.5))
+nbr_points[1,1]=sum(np.logical_and(y<0.18,x>1.5))
+
+np.savetxt("correlations/prediction_range_vs_correlation_values_{}_{}".format(sys.argv[1],sys.argv[3]),nbr_points)
 
 
 df = pd.DataFrame(correlations, columns=column_names, index=row_names)
