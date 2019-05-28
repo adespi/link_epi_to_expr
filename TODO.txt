@@ -1,5 +1,12 @@
 TODO:
 
+look at cell type specificity and how that makes a difference with cells we choose
+predicted TF binding profile, chip seq or motif. see how much we add
+
+cluster genes that have similar expression correlation
+cluster positions that have similar deepsea prediction
+==> see how the clusters relate to each other: all by all max, average, etc...
+
 change kmeans search to include only interesting genes
 plot by communitiy, better way to plot
 try to cluster patient using the expression from the interesting TF (K-mean clustering)
