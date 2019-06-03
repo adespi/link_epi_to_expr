@@ -1,5 +1,6 @@
 #!/bin/bash
 #avant de lancer le script : source activate kipoi-DeepSEA__predict
+source activate kipoi-DeepSEA__predict
 overall_start=`date`
 #to lauch the script from any directory
 cd `dirname $0`
