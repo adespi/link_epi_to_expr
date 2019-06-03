@@ -15,7 +15,7 @@ row.names(csv) <-
   paste(cbind(csv[1], seq(919))$X, cbind(csv[1], seq(919))$`seq(919)`)
 csv[1] <- list(NULL)
 csv[is.na(csv)] <- 0
-csv[apply(abs(csv), 2, max)==0] <- list(NULL)
+csv[apply(abs(csv), 2, max)<0.01] <- list(NULL)
 
 fdr.out = fdrtool(
   as.vector(as.matrix(csv)),
