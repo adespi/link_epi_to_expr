@@ -75,6 +75,10 @@ with open('deepsea_postprocessing/predictor.names') as f:
 expr=quantile_transform(expr, output_distribution="normal", copy=True)
 
 gene_n=0
+
+for i in range(sys.argv[2]):
+    answ[i,:,:]=quantile_transform(answ[i,:,:], output_distribution="normal", copy=True)
+
 for gene in dfexpr["TargetID"]:
     gene=gene.split(".")[0]
     #create empty correlation file
@@ -83,7 +87,7 @@ for gene in dfexpr["TargetID"]:
     np.seterr(divide='ignore', invalid='ignore')
     #compute all the correlations
     for i in range(sys.argv[2]):
-        correlations[:,i]=np.corrcoef(np.transpose(quantile_transform(answ[i,:,:], output_distribution="normal", copy=True)),expr[gene_n])[-1][:-1]
+        correlations[:,i]=np.corrcoef(np.transpose(answ[i,:,:]),expr[gene_n])[-1][:-1]
     np.seterr(divide='warn', invalid='warn')
     #print(i)
     #convert np_array to pd DataFrame to add column and row names and then save correlations to .csv.gz
